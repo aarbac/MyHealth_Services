@@ -30,8 +30,11 @@ public class Driver {
 			}
 		}
 		
+		Faculty Tim = new Faculty();
+		
 		Grader[] graders = new Grader[2];
 		graders[0] = liz;
+		graders[1] = Tim;
 	}
 
 }
