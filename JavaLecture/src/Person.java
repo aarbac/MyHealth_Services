@@ -6,7 +6,7 @@
  * @author Aaresh Bachana
  */
 
-public abstract class Person 
+public abstract class Person implements Comparable
 {
 	/**
 	 * @param args
@@ -54,4 +54,11 @@ public abstract class Person
 
 	//Abstract method code needs to be implemented in all child classes
 	public abstract String getPhonenumber();
+	
+	public int compareTo(Object obj)
+	{
+		Person p = (Person) obj;
+		String person_name = p.getName();
+		return name.compareTo(person_name);
+	}
 }

@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 public class Driver {
 
@@ -35,6 +36,12 @@ public class Driver {
 		Grader[] graders = new Grader[2];
 		graders[0] = liz;
 		graders[1] = Tim;
+		
+		Arrays.sort(people);
+		for(int i = 0; i < people.length; i++)
+		{
+			System.out.println(people[i]);
+		}
 	}
 
 }
