@@ -13,19 +13,36 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 //import java.io.IOException;
 //import javax.imageio.ImageIO;
+import java.util.ArrayList;
+
+//Hibernate Libraries
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 public class Driver {
+
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		new GUI();
+		//ArrayList<Person> library = new ArrayList<Person>();
+
 
 	}
+	
 
 }
 
 class GUI implements ActionListener {
 	
+	//GUI g = new GUI();
+	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+
+
+	// this would save all the Media objects into the database
+
+	ArrayList<Person> library = new ArrayList<Person>();
 	private JFrame f;
 	private JTextField textFieldusrname;
 	private JTextField textFieldpsswrd;
@@ -38,6 +55,40 @@ class GUI implements ActionListener {
 	JButton Forgotbutton;
 	JButton CreatebuttonP;
 	JTextField textFieldUserName = new JTextField(15);
+	JTextField textFieldFirstName = new JTextField(15);
+	JTextField textFieldLastName = new JTextField(15);
+	JTextField textFieldBG = new JTextField(15);
+	JTextField textFieldAge = new JTextField(15);
+	JTextField textFieldPassword = new JPasswordField(15);
+	JTextField textFieldRPassword = new JPasswordField(15);
+	JTextField textFieldphoneNum = new JTextField(15);
+	JTextField textFieldAddress = new JTextField(50);
+	JCheckBox checkboxpatient = new JCheckBox("Patient");
+	JCheckBox checkboxdoctor = new JCheckBox("Doctor");
+	String[] options = {"Male","Female","Other"};
+	JComboBox<String> list = new JComboBox<String>(options);
+	
+	public void HomePageGui()
+	{
+		f  = new JFrame("MyHealth----->Welcome to MyHealth Service");
+	//	f  = new JFrame("MyHealth----->Create Profile");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(1000, 1000);
+		panel=new JPanel();
+		panel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
+		//GroupLayout layout = new GroupLayout( panel );
+		panel.setLayout( null );
+		f.add(panel);
+		JLabel label = new JLabel();
+		Image background = new ImageIcon(this.getClass().getResource("/bg.jpg")).getImage();
+		Image scaledImage = background.getScaledInstance(1000, 400,Image.SCALE_SMOOTH);
+		label.setIcon(new ImageIcon(scaledImage));
+		label.setBounds(0, 0, 1000, 300);
+		panel.add(label);
+		f.setVisible(true);
+		
+	}
+	
 	public void createProfileGui()
 	{
 		f  = new JFrame("MyHealth----->Create Profile");
@@ -62,7 +113,7 @@ class GUI implements ActionListener {
 		Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
 		panel.add(FirstName);
 		FirstName.setFont(newFont);
-		JTextField textFieldFirstName = new JTextField(15);
+		
 		textFieldFirstName.setBounds(550, 350, 200, 30);
 		textFieldFirstName.setFont(newFont);
 		panel.add(textFieldFirstName);		
@@ -72,7 +123,7 @@ class GUI implements ActionListener {
 		LastName.setBounds(300, 400, 200, 30);
 		panel.add(LastName);
 		LastName.setFont(newFont);
-		JTextField textFieldLastName = new JTextField(15);
+
 		textFieldLastName.setBounds(550, 400, 200, 30);
 		textFieldLastName.setFont(newFont);
 		panel.add(textFieldLastName);		
@@ -82,7 +133,7 @@ class GUI implements ActionListener {
 		BG.setBounds(300, 450, 200, 30);
 		panel.add(BG);
 		BG.setFont(newFont);
-		JTextField textFieldBG = new JTextField(15);
+		
 		textFieldBG.setBounds(550, 450, 200, 30);
 		textFieldBG.setFont(newFont);
 		panel.add(textFieldBG);		
@@ -92,7 +143,7 @@ class GUI implements ActionListener {
 		Age.setBounds(300, 500, 200, 30);
 		panel.add(Age);
 		Age.setFont(newFont);
-		JTextField textFieldAge = new JTextField(15);
+		
 		textFieldAge.setBounds(550, 500, 200, 30);
 		textFieldAge.setFont(newFont);
 		panel.add(textFieldAge);
@@ -106,8 +157,8 @@ class GUI implements ActionListener {
 //		textFieldGender.setBounds(550, 550, 200, 30);
 //		textFieldGender.setFont(newFont);
 //		panel.add(textFieldGender);
-		String[] options = {"Male","Female","Other"};
-		JComboBox<String> list = new JComboBox<String>(options);
+
+
 		list.setBounds(550, 550, 200, 30);
 		list.setFont(newFont);
 		panel.add(list);
@@ -127,7 +178,7 @@ class GUI implements ActionListener {
 		Password.setBounds(300, 650, 200, 30);
 		panel.add(Password);
 		Password.setFont(newFont);
-		JTextField textFieldPassword = new JTextField(15);
+		
 		textFieldPassword.setBounds(550, 650, 200, 30);
 		textFieldPassword.setFont(newFont);
 		panel.add(textFieldPassword);
@@ -137,7 +188,7 @@ class GUI implements ActionListener {
 		RPassword.setBounds(300, 700, 200, 30);
 		panel.add(RPassword);
 		RPassword.setFont(newFont);
-		JTextField textFieldRPassword = new JTextField(15);
+	
 		textFieldRPassword.setBounds(550, 700, 200, 30);
 		textFieldRPassword.setFont(newFont);
 		panel.add(textFieldRPassword);
@@ -147,7 +198,7 @@ class GUI implements ActionListener {
 		phoneNum.setBounds(300, 750, 200, 30);
 		panel.add(phoneNum);
 		phoneNum.setFont(newFont);
-		JTextField textFieldphoneNum = new JTextField(15);
+
 		textFieldphoneNum.setBounds(550, 750, 200, 30);
 		textFieldphoneNum.setFont(newFont);
 		panel.add(textFieldphoneNum);
@@ -157,19 +208,19 @@ class GUI implements ActionListener {
 		address.setBounds(300, 800, 200, 30);
 		panel.add(address);
 		address.setFont(newFont);
-		JTextField textFieldAddress = new JTextField(50);
+		
 		textFieldAddress.setBounds(550, 800, 250, 50);
 		textFieldAddress.setFont(newFont);
 		panel.add(textFieldAddress);
 
 		// Patient Check Box
-		JCheckBox checkboxpatient = new JCheckBox("Patient");
+
 		checkboxpatient.setBounds(250, 300, 200, 30);
 		checkboxpatient.setFont(newFont);
 		panel.add(checkboxpatient);
 
 		// Doctor Check Box
-		JCheckBox checkboxdoctor = new JCheckBox("Doctor");
+
 		checkboxdoctor.setBounds(450, 300, 200, 30);
 		checkboxdoctor.setFont(newFont);
 		panel.add(checkboxdoctor);
@@ -190,7 +241,7 @@ class GUI implements ActionListener {
 		CreatebuttonP.setBounds(550, 875, 200, 30);
 		CreatebuttonP.setFont(newFont);
 		panel.add(CreatebuttonP);
-		
+		CreatebuttonP.addActionListener(this);
 		f.setVisible(true);
 		
 	}
@@ -278,13 +329,58 @@ class GUI implements ActionListener {
 		
 		else if(ae.getSource() == CreatebuttonP){
 			
-			f.dispose();
+			//f.dispose();
+			System.out.println("wdgjwahdvjkabd");
+
 			Person P;
+			if(checkboxpatient.isSelected())
+			{
+				P = new Patient();
+				library.add(P);
+				P.setFirstname(textFieldFirstName.getText());
+				P.setLastname(textFieldLastName.getText());
+				P.setAge(textFieldAge.getText());
+				P.setLocation(textFieldAddress.getText());
+				P.setPhoneNo(textFieldphoneNum.getText());
+				//P.setSecurityAnswer(securityAnswer);
+				P.setGender(list.getSelectedItem().toString());
+				System.out.println(P.getGender());
+				System.out.println(P.getFirstname());
+			}
+			else if(checkboxdoctor.isSelected())
+			{
+				
+				P = new Doctor();
+				library.add(P);
+				P.setFirstname(textFieldFirstName.getText());
+				P.setLastname(textFieldLastName.getText());
+				P.setAge(textFieldAge.getText());
+				P.setLocation(textFieldAddress.getText());
+				P.setPhoneNo(textFieldphoneNum.getText());
+				//P.setSecurityAnswer(securityAnswer);
+				P.setGender(list.getSelectedItem().toString());
+				System.out.println(P.getGender());
+				System.out.println(P.getFirstname());
+			}
 			Profile Pr = new Profile();
 			Pr.setUsername_input(textFieldUserName.getText());
+			Pr.setPassword_input(textFieldUserName.getText());
+//Test if working
 			
-			
-			//this.HomePageGui();
+			System.out.println(Pr.getUsername_input());
+			System.out.println(Pr.getPassword_input());
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			for(int i =0; i< library.size();i++)
+			{
+				session.save(library.get(i));
+			}
+			session.getTransaction().commit();
+			session.close();
+			sessionFactory.close();
+			f.dispose();
+			//this.createProfileGui();
+			this.HomePageGui();
 			
 		}
 		
@@ -293,13 +389,17 @@ class GUI implements ActionListener {
 			String usrname=textFieldusrname.getText();
 			String psswrd=textFieldpsswrd.getText();
 			if (usrname.equals("Anish") && psswrd.equals("csci5448")) {
+				f.dispose();
+				//this.createProfileGui();
+				this.HomePageGui();
 				System.out.println("Welcome to MyHealth");
 			  // Profile p=new Profile();
 			  // p.show
 			   //JLabel label = new JLabel("Welcome:"+value1);
 			   //page.getContentPane().add(label);
 			}
-			else{	
+			else{
+			   JOptionPane.showMessageDialog(f,"Invalid Username and Password");
 			   System.out.println("enter the valid username and password");
 			  // JOptionPane.showMessageDialog(this,"Incorrect login or password",
 			   //"Error",JOptionPane.ERROR_MESSAGE);

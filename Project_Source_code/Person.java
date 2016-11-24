@@ -1,9 +1,14 @@
+import javax.persistence.Column;
+//import javax.annotation.Generated;
 
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
 public abstract class Person {
-
+	@Column(name="FirstName")
 	String firstname;
 	String lastname;
-	int age;
+	String age;
 	String gender;
 	String phoneNo;
 	String location;
@@ -20,10 +25,10 @@ public abstract class Person {
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
-	public int getAge() {
+	public String getAge() {
 		return age;
 	}
-	public void setAge(int age) {
+	public void setAge(String age) {
 		this.age = age;
 	}
 	public String getGender() {
