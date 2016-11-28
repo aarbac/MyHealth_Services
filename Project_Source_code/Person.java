@@ -5,7 +5,7 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class Person {
-	@Column(name="FirstName")
+	@Column
 	String firstname;
 	String lastname;
 	String age;

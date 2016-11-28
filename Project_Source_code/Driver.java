@@ -7,6 +7,7 @@
  *
  */
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,11 +15,13 @@ import java.awt.event.ActionListener;
 //import java.io.IOException;
 //import javax.imageio.ImageIO;
 import java.util.ArrayList;
+import java.util.List;
 
 //Hibernate Libraries
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+//import org.hibernate.query.Query;
 
 public class Driver {
 
@@ -85,6 +88,10 @@ class GUI implements ActionListener {
 		label.setIcon(new ImageIcon(scaledImage));
 		label.setBounds(0, 0, 1000, 300);
 		panel.add(label);
+		JLabel Appointment= new JLabel("Appointment");
+		Appointment.setBounds(500, 500, 300, 300);
+		panel.add(Appointment);
+		Appointment.setIcon(new ImageIcon(this.getClass().getResource("/Appt.png")));
 		f.setVisible(true);
 		
 	}
@@ -318,6 +325,7 @@ class GUI implements ActionListener {
 		
 	}
 	
+	
 	public void actionPerformed(ActionEvent ae){
 		
 		if(ae.getSource() == Createbutton){
@@ -364,7 +372,7 @@ class GUI implements ActionListener {
 			}
 			Profile Pr = new Profile();
 			Pr.setUsername_input(textFieldUserName.getText());
-			Pr.setPassword_input(textFieldUserName.getText());
+			Pr.setPassword_input(textFieldPassword.getText());
 //Test if working
 			
 			System.out.println(Pr.getUsername_input());
@@ -375,6 +383,7 @@ class GUI implements ActionListener {
 			{
 				session.save(library.get(i));
 			}
+			session.save(Pr);
 			session.getTransaction().commit();
 			session.close();
 			sessionFactory.close();
@@ -388,21 +397,33 @@ class GUI implements ActionListener {
 			
 			String usrname=textFieldusrname.getText();
 			String psswrd=textFieldpsswrd.getText();
-			if (usrname.equals("Anish") && psswrd.equals("csci5448")) {
-				f.dispose();
-				//this.createProfileGui();
-				this.HomePageGui();
-				System.out.println("Welcome to MyHealth");
-			  // Profile p=new Profile();
-			  // p.show
-			   //JLabel label = new JLabel("Welcome:"+value1);
-			   //page.getContentPane().add(label);
-			}
-			else{
-			   JOptionPane.showMessageDialog(f,"Invalid Username and Password");
-			   System.out.println("enter the valid username and password");
-			  // JOptionPane.showMessageDialog(this,"Incorrect login or password",
-			   //"Error",JOptionPane.ERROR_MESSAGE);
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			@SuppressWarnings({ "unchecked", "deprecation" })
+			List<Profile> result = (List<Profile>) session.createQuery("from Profile").list();
+			int match =0;
+			for(int i =0; i< result.size();i++)
+			{
+				if(result.get(0).getUsername_input().equals(usrname))
+				{
+					match = 1;
+					if(result.get(0).getPassword_input().equals(psswrd))
+					{
+						f.dispose();
+						//this.createProfileGui();
+						this.HomePageGui();
+						System.out.println("Welcome to MyHealth");
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(f,"Invalid Username and Password");
+					}
+					
+				}
+				if(match ==0)
+				{
+					JOptionPane.showMessageDialog(f,"Invalid Username and Password");
+				}
 			}
 			
 		}
