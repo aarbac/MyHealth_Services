@@ -379,8 +379,8 @@ class GUI implements ActionListener {
 		else if(ae.getSource() == Appointment){
 			
 			System.out.println("wdgjwahyugwyqgdvjkabd");
-			Appointment Ap = new Appointment();
-			Ap.appointmentGui();
+			AppointmentGui Ap = new AppointmentGui();
+			Ap.appointmentGui(CurrentID);
 
 			
 		}

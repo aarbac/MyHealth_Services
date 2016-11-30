@@ -23,8 +23,8 @@
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">true</property>
 
-        <!-- Drop the existing tables and create new one 
-        <property name="hbm2ddl.auto">create</property> -->
+        <!-- Drop the existing tables and create new one -->
+        <property name="hbm2ddl.auto">update</property> 
  
         <!-- Mention here all the model classes along with their package name -->
  		<mapping class="Patient"/>
@@ -32,6 +32,7 @@
  		<mapping class="Profile"/>
  		<mapping class="Schedule"/>
  		<mapping class="Slots"/>
+ 		<mapping class="Appointment"/>
  		 
     </session-factory>
 </hibernate-configuration>
