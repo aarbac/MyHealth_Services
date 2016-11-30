@@ -12,11 +12,26 @@ public class Profile{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int ProfileID;
+	public int getProfileID() {
+		return ProfileID;
+	}
+	public void setProfileID(int profileID) {
+		ProfileID = profileID;
+	}
+
 	@Column(name = "Username")
 	private String username_input;
 	@Column(name = "Password")
 	private String password_input;
+	@Column(name = "USERType")
+	private String usertype;
 	
+	public String getUsertype() {
+		return usertype;
+	}
+	public void setUsertype(String usertype) {
+		this.usertype = usertype;
+	}
 	public String getUsername_input() {
 		return username_input;
 	}

@@ -13,6 +13,13 @@ public class Slots {
 	String start_time;
 	String end_time;
 	String day;
+	int DocId;
+	public int getDocId() {
+		return DocId;
+	}
+	public void setDocId(int docId) {
+		DocId = docId;
+	}
 	public int getSlotNum() {
 		return SlotNum;
 	}

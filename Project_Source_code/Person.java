@@ -1,10 +1,20 @@
 import javax.persistence.Column;
 //import javax.annotation.Generated;
-
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class Person {
+	@Id
+	@GeneratedValue
+	int PersonId;
+	public int getPersonId() {
+		return PersonId;
+	}
+	public void setPersonId(int personId) {
+		PersonId = personId;
+	}
 	@Column
 	String firstname;
 	String lastname;

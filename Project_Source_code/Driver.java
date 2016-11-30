@@ -47,7 +47,6 @@ class GUI implements ActionListener {
 
 	ArrayList<Person> library = new ArrayList<Person>();
 	private JFrame f;
-	private JFrame fm;
 	private JTextField textFieldusrname;
 	private JTextField textFieldpsswrd;
 	private JLabel jlabelusrname;
@@ -73,9 +72,10 @@ class GUI implements ActionListener {
 	JCheckBox checkboxdoctor = new JCheckBox("Doctor");
 	String[] options = {"Male","Female","Other"};
 	JComboBox<String> list = new JComboBox<String>(options);
-	
-	public void HomePageGui()
+	int CurrentID;
+	public void HomePageGui(int PersonID, String _usertype)
 	{
+		CurrentID = PersonID;
 		f  = new JFrame("MyHealth----->Welcome to MyHealth Service");
 	//	f  = new JFrame("MyHealth----->Create Profile");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -91,23 +91,26 @@ class GUI implements ActionListener {
 		label.setIcon(new ImageIcon(scaledImage));
 		label.setBounds(0, 0, 1000, 300);
 		panel.add(label);
-		//Appointment		
-		JLabel Appt = new JLabel();
-		Appt.setText("Appointment");
-		Appt.setBounds(100, 325, 150, 25);
-		Font currentFont = Appt.getFont();
-		Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
-		panel.add(Appt);
-		Appt.setFont(newFont);
-		Appointment= new JButton();
-		Appointment.setBounds(230,325, 30,25);
-	//	Appointment.setHorizontalTextPosition(SwingConstants.RIGHT);
-	//	Appointment.setIconTextGap(4);
-	//	panel.add(Appointment);
-		Image appt = new ImageIcon(this.getClass().getResource("/Appt.png")).getImage();
-		Image scaledappt = appt.getScaledInstance(25, 25,Image.SCALE_SMOOTH);
-		Appointment.setIcon(new ImageIcon(scaledappt) );
-		panel.add(Appointment);
+		//Appointment	
+		if(_usertype.equals("Patient"))
+		{	
+			JLabel Appt = new JLabel();
+			Appt.setText("Appointment");
+			Appt.setBounds(100, 325, 150, 25);
+			Font currentFont = Appt.getFont();
+			Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
+			panel.add(Appt);
+			Appt.setFont(newFont);
+			Appointment= new JButton();
+			Appointment.setBounds(230,325, 30,25);
+		//	Appointment.setHorizontalTextPosition(SwingConstants.RIGHT);
+		//	Appointment.setIconTextGap(4);
+		//	panel.add(Appointment);
+			Image appt = new ImageIcon(this.getClass().getResource("/Appt.png")).getImage();
+			Image scaledappt = appt.getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+			Appointment.setIcon(new ImageIcon(scaledappt) );
+			panel.add(Appointment);
+		}	
 	//Home Button
 		JButton home= new JButton();
 		home.setBounds(50,325, 30,25);
@@ -119,14 +122,18 @@ class GUI implements ActionListener {
 		home.setIcon(new ImageIcon(scaledhome) );
 		panel.add(home);
 		//Create schedule Button
-		sch= new JButton("Sch");
-		sch.setBounds(500,325, 30,25);
-		panel.add(sch);
+		if(_usertype.equals("Doctor"))
+		{	
+			sch= new JButton("Sch");
+			sch.setBounds(500,325, 30,25);
+			panel.add(sch);
+			sch.addActionListener(this);
+		}
 	//	Appointment.setHorizontalTextPosition(SwingConstants.RIGHT);
 	//	Appointment.setIconTextGap(4);
 		f.setVisible(true);
 		Appointment.addActionListener(this);
-		sch.addActionListener(this);
+		
 		
 	}
 	
@@ -371,18 +378,17 @@ class GUI implements ActionListener {
 		
 		else if(ae.getSource() == Appointment){
 			
-			System.out.println("wdgjwahdvjkabd");
-			fm = new JFrame("MyHealth");
-			fm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			fm.setSize(500, 300);
-			fm.setVisible(true);
+			System.out.println("wdgjwahyugwyqgdvjkabd");
+			Appointment Ap = new Appointment();
+			Ap.appointmentGui();
+
 			
 		}
 		else if(ae.getSource() == sch){
 			
-			System.out.println("wdgjwahdvjkabd");
-			Schedule sc = new Schedule();
-			sc.scheduleGui();
+			System.out.println("djskfkdhfk");
+			Schedule sc = new Schedule( );
+			sc.scheduleGui(CurrentID);
 			
 		}
 		
@@ -390,10 +396,11 @@ class GUI implements ActionListener {
 			
 			//f.dispose();
 			
-
+			String Type= "Unknown";
 			Person P;
 			if(checkboxpatient.isSelected())
 			{
+				Type = "Patient";
 				P = new Patient();
 				library.add(P);
 				P.setFirstname(textFieldFirstName.getText());
@@ -408,7 +415,7 @@ class GUI implements ActionListener {
 			}
 			else if(checkboxdoctor.isSelected())
 			{
-				
+				Type = "Doctor";
 				P = new Doctor();
 				library.add(P);
 				P.setFirstname(textFieldFirstName.getText());
@@ -424,6 +431,7 @@ class GUI implements ActionListener {
 			Profile Pr = new Profile();
 			Pr.setUsername_input(textFieldUserName.getText());
 			Pr.setPassword_input(textFieldPassword.getText());
+			Pr.setUsertype(Type);
 //Test if working
 			
 			System.out.println(Pr.getUsername_input());
@@ -440,7 +448,7 @@ class GUI implements ActionListener {
 			sessionFactory.close();
 			f.dispose();
 			//this.createProfileGui();
-			this.HomePageGui();
+			this.HomePageGui(Pr.getProfileID(), Type );
 			
 		}
 		
@@ -462,7 +470,8 @@ class GUI implements ActionListener {
 					{
 						f.dispose();
 						//this.createProfileGui();
-						this.HomePageGui();
+						
+						this.HomePageGui(result.get(i).getProfileID(),result.get(i).getUsertype());
 						System.out.println("Welcome to MyHealth");
 					}
 					else

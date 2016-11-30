@@ -32,9 +32,10 @@ public class Schedule implements ActionListener{
 	JButton add;
 	private JFrame s;
 	private JPanel panel;
-	
-	public void scheduleGui()
+	int CurrDoc;
+	public void scheduleGui(int _DoctorID)
 	{
+		CurrDoc = _DoctorID;
 		s = new JFrame("MyHealth----->Create Schedule");
 		s.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		s.setSize(600, 600);
@@ -44,8 +45,6 @@ public class Schedule implements ActionListener{
 		//GroupLayout layout = new GroupLayout( panel );
 		panel.setLayout( null );
 		s.add(panel);
-		add = new JButton("Add to Schedule");
-		panel.add(add);
 		
 //WEEK 1	
 		JLabel Week1 = new JLabel();
@@ -137,6 +136,7 @@ public class Schedule implements ActionListener{
 			S.setStart_time(textFieldStarttime.getText());
 			S.setEnd_time(textFieldEndtime.getText());
 			S.setDay(list.getSelectedItem().toString());
+			S.setDocId(CurrDoc);
 //Test if working
 			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 			Session session = sessionFactory.openSession();
