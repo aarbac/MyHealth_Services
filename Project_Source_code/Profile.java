@@ -1,3 +1,4 @@
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "LoginInfo")
-public class Profile {
+public class Profile{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int ProfileID;
@@ -43,4 +44,7 @@ public class Profile {
 	{
 		
 	}
+	
 }
+
+

@@ -47,6 +47,7 @@ class GUI implements ActionListener {
 
 	ArrayList<Person> library = new ArrayList<Person>();
 	private JFrame f;
+	private JFrame fm;
 	private JTextField textFieldusrname;
 	private JTextField textFieldpsswrd;
 	private JLabel jlabelusrname;
@@ -57,6 +58,8 @@ class GUI implements ActionListener {
 	JButton Loginbutton;
 	JButton Forgotbutton;
 	JButton CreatebuttonP;
+	JButton Appointment;
+	JButton sch;
 	JTextField textFieldUserName = new JTextField(15);
 	JTextField textFieldFirstName = new JTextField(15);
 	JTextField textFieldLastName = new JTextField(15);
@@ -88,11 +91,42 @@ class GUI implements ActionListener {
 		label.setIcon(new ImageIcon(scaledImage));
 		label.setBounds(0, 0, 1000, 300);
 		panel.add(label);
-		JLabel Appointment= new JLabel("Appointment");
-		Appointment.setBounds(500, 500, 300, 300);
+		//Appointment		
+		JLabel Appt = new JLabel();
+		Appt.setText("Appointment");
+		Appt.setBounds(100, 325, 150, 25);
+		Font currentFont = Appt.getFont();
+		Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
+		panel.add(Appt);
+		Appt.setFont(newFont);
+		Appointment= new JButton();
+		Appointment.setBounds(230,325, 30,25);
+	//	Appointment.setHorizontalTextPosition(SwingConstants.RIGHT);
+	//	Appointment.setIconTextGap(4);
+	//	panel.add(Appointment);
+		Image appt = new ImageIcon(this.getClass().getResource("/Appt.png")).getImage();
+		Image scaledappt = appt.getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+		Appointment.setIcon(new ImageIcon(scaledappt) );
 		panel.add(Appointment);
-		Appointment.setIcon(new ImageIcon(this.getClass().getResource("/Appt.png")));
+	//Home Button
+		JButton home= new JButton();
+		home.setBounds(50,325, 30,25);
+	//	Appointment.setHorizontalTextPosition(SwingConstants.RIGHT);
+	//	Appointment.setIconTextGap(4);
+
+		Image homeicon = new ImageIcon(this.getClass().getResource("/home.png")).getImage();
+		Image scaledhome = homeicon.getScaledInstance(25, 25,Image.SCALE_SMOOTH);
+		home.setIcon(new ImageIcon(scaledhome) );
+		panel.add(home);
+		//Create schedule Button
+		sch= new JButton("Sch");
+		sch.setBounds(500,325, 30,25);
+		panel.add(sch);
+	//	Appointment.setHorizontalTextPosition(SwingConstants.RIGHT);
+	//	Appointment.setIconTextGap(4);
 		f.setVisible(true);
+		Appointment.addActionListener(this);
+		sch.addActionListener(this);
 		
 	}
 	
@@ -335,10 +369,27 @@ class GUI implements ActionListener {
 			
 		}
 		
+		else if(ae.getSource() == Appointment){
+			
+			System.out.println("wdgjwahdvjkabd");
+			fm = new JFrame("MyHealth");
+			fm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			fm.setSize(500, 300);
+			fm.setVisible(true);
+			
+		}
+		else if(ae.getSource() == sch){
+			
+			System.out.println("wdgjwahdvjkabd");
+			Schedule sc = new Schedule();
+			sc.scheduleGui();
+			
+		}
+		
 		else if(ae.getSource() == CreatebuttonP){
 			
 			//f.dispose();
-			System.out.println("wdgjwahdvjkabd");
+			
 
 			Person P;
 			if(checkboxpatient.isSelected())
@@ -404,10 +455,10 @@ class GUI implements ActionListener {
 			int match =0;
 			for(int i =0; i< result.size();i++)
 			{
-				if(result.get(0).getUsername_input().equals(usrname))
+				if(result.get(i).getUsername_input().equals(usrname))
 				{
 					match = 1;
-					if(result.get(0).getPassword_input().equals(psswrd))
+					if(result.get(i).getPassword_input().equals(psswrd))
 					{
 						f.dispose();
 						//this.createProfileGui();
@@ -417,14 +468,17 @@ class GUI implements ActionListener {
 					else
 					{
 						JOptionPane.showMessageDialog(f,"Invalid Username and Password");
+						System.out.println("Error1");
 					}
 					
 				}
-				if(match ==0)
+			}	
+				if(match == 0)
 				{
+					System.out.println("Error2");
 					JOptionPane.showMessageDialog(f,"Invalid Username and Password");
 				}
-			}
+			
 			
 		}
 	   
