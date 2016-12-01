@@ -53,12 +53,17 @@ class GUI implements ActionListener {
 	private JLabel jlabelpsswrd;
 	private JLabel jlabelmsg;
 	private JPanel panel;
+	private JLabel DocSearch;
+	JTextField textFieldDocName = new JTextField(15);
 	JButton Createbutton;
 	JButton Loginbutton;
 	JButton Forgotbutton;
 	JButton CreatebuttonP;
 	JButton Appointment;
 	JButton sch;
+	JButton ReqTest;
+	JButton viewBill;
+	JButton selectTest;
 	JTextField textFieldUserName = new JTextField(15);
 	JTextField textFieldFirstName = new JTextField(15);
 	JTextField textFieldLastName = new JTextField(15);
@@ -72,6 +77,9 @@ class GUI implements ActionListener {
 	JCheckBox checkboxdoctor = new JCheckBox("Doctor");
 	String[] options = {"Male","Female","Other"};
 	JComboBox<String> list = new JComboBox<String>(options);
+	String[] Testoptions = {"Blood Test","MRI Scan","Ultrasound","X-Ray","Skin Test"};
+	JComboBox<String> testlist= new JComboBox<String>(Testoptions);
+	Font newFont;
 	int CurrentID;
 	public void HomePageGui(int PersonID, String _usertype)
 	{
@@ -98,7 +106,7 @@ class GUI implements ActionListener {
 			Appt.setText("Appointment");
 			Appt.setBounds(100, 325, 150, 25);
 			Font currentFont = Appt.getFont();
-			Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
+			newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
 			panel.add(Appt);
 			Appt.setFont(newFont);
 			Appointment= new JButton();
@@ -110,7 +118,26 @@ class GUI implements ActionListener {
 			Image scaledappt = appt.getScaledInstance(25, 25,Image.SCALE_SMOOTH);
 			Appointment.setIcon(new ImageIcon(scaledappt) );
 			panel.add(Appointment);
+//Request Test
+			ReqTest= new JButton("Request Test");
+			ReqTest.setBounds(300,325, 200,25);
+			ReqTest.setFont(newFont);
+			panel.add(ReqTest);
+//View Bill
+			viewBill= new JButton("View Bills");
+			viewBill.setBounds(525,325, 200,25);
+			viewBill.setFont(newFont);
+			panel.add(viewBill);
+
+				
+			
 		}	
+		//Messages
+		JButton viewMessages = new JButton("Messages");
+		viewMessages.setBounds(750,325, 200,25);
+		newFont = viewMessages.getFont().deriveFont(viewMessages.getFont().getSize() * 1.4F);
+		viewMessages.setFont(newFont);
+		panel.add(viewMessages);
 	//Home Button
 		JButton home= new JButton();
 		home.setBounds(50,325, 30,25);
@@ -133,6 +160,8 @@ class GUI implements ActionListener {
 	//	Appointment.setIconTextGap(4);
 		f.setVisible(true);
 		Appointment.addActionListener(this);
+		ReqTest.addActionListener(this);
+		viewBill.addActionListener(this);
 		
 		
 	}
@@ -376,6 +405,73 @@ class GUI implements ActionListener {
 			
 		}
 		
+		else if(ae.getSource() == ReqTest){
+			
+			DocSearch = new JLabel();
+			DocSearch.setText("Enter the Doctor name");
+			DocSearch.setBounds(300, 450, 250, 25);
+			Font currentFont = DocSearch.getFont();
+			newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
+			panel.add(DocSearch);
+			DocSearch.setFont(newFont);		
+			textFieldDocName.setBounds(550, 450, 200, 30);
+			textFieldDocName.setFont(newFont);
+			panel.add(textFieldDocName);
+			selectTest = new JButton("Select Test");
+			selectTest.setBounds(550,600, 200,30);
+			selectTest.setFont(newFont);
+			panel.add(selectTest);
+			JLabel tests = new JLabel();
+			tests.setText("Test Options");
+			tests.setBounds(300, 550, 200, 30);
+			panel.add(tests);
+			tests.setFont(newFont);
+			testlist.setBounds(550, 550, 200, 30);
+			testlist.setFont(newFont);
+			panel.add(testlist);
+			f.setVisible(true);
+			selectTest.addActionListener(this);
+			
+			
+		}
+		else if(ae.getSource() == selectTest){
+			Records R = new Records();
+			String docinput=textFieldDocName.getText();
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			@SuppressWarnings({ "unchecked", "deprecation" })
+			List<Doctor> result = (List<Doctor>) session.createQuery("from Doctor").list();
+
+			int match = 0;
+		
+			for(int i = 0; i< result.size();i++)
+			{
+				if(result.get(i).getFirstname().equals(docinput))
+				{
+					match = 1;
+					System.out.println("Doctor Found");
+					R.setRDocId(result.get(i).getDocId());
+					R.setRPatId(CurrentID);
+					R.setRType("Test");
+					R.setRApproval("No");
+					R.setStatus("Pending for Approval");
+					session.save(R);
+//					Appt.setDOCID(result.get(i).getDocId());
+//					this.updateView(Appt.getDOCID(), Appt.getPatientID());
+					break;
+					
+				}
+			}
+			session.close();
+			sessionFactory.close();
+			if(match == 0)
+			{
+				JOptionPane.showMessageDialog(f,"No entry Found");
+			}
+
+			
+		}
 		else if(ae.getSource() == Appointment){
 			
 			System.out.println("wdgjwahyugwyqgdvjkabd");

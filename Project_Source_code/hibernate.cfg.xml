@@ -33,6 +33,7 @@
  		<mapping class="Schedule"/>
  		<mapping class="Slots"/>
  		<mapping class="Appointment"/>
+ 		<mapping class="Records"/>
  		 
     </session-factory>
 </hibernate-configuration>
