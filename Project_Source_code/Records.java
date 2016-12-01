@@ -13,10 +13,17 @@ public class Records {
 	int RecordId;
 	@Column
 	String RType;
+	String Rtestname;
 	int RPatId;
 	int RDocId;
 	String RApproval;
 	String Status;
+	public String getRtestname() {
+		return Rtestname;
+	}
+	public void setRtestname(String rtestname) {
+		Rtestname = rtestname;
+	}
 	public int getRecordId() {
 		return RecordId;
 	}

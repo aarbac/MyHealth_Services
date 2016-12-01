@@ -64,6 +64,7 @@ class GUI implements ActionListener {
 	JButton ReqTest;
 	JButton viewBill;
 	JButton selectTest;
+	JButton viewMessages;
 	JTextField textFieldUserName = new JTextField(15);
 	JTextField textFieldFirstName = new JTextField(15);
 	JTextField textFieldLastName = new JTextField(15);
@@ -133,7 +134,7 @@ class GUI implements ActionListener {
 			
 		}	
 		//Messages
-		JButton viewMessages = new JButton("Messages");
+		viewMessages = new JButton("Messages");
 		viewMessages.setBounds(750,325, 200,25);
 		newFont = viewMessages.getFont().deriveFont(viewMessages.getFont().getSize() * 1.4F);
 		viewMessages.setFont(newFont);
@@ -162,6 +163,7 @@ class GUI implements ActionListener {
 		Appointment.addActionListener(this);
 		ReqTest.addActionListener(this);
 		viewBill.addActionListener(this);
+		viewMessages.addActionListener(this);
 		
 		
 	}
@@ -404,6 +406,36 @@ class GUI implements ActionListener {
 			this.createProfileGui();
 			
 		}
+		else if(ae.getSource() == viewMessages){
+			
+			
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			@SuppressWarnings({ "unchecked", "deprecation" })
+			List<Records> result = (List<Records>) session.createQuery("from Records").list();
+			session.close();
+			sessionFactory.close();
+			int match =0;
+			String S;
+			for(int i = 0; i< result.size();i++)
+			{
+				if(result.get(i).getRPatId()== (CurrentID))
+				{
+					match = 1;
+					S = result.get(i).getRType() + ":" + result.get(i).getRtestname() + " " + result.get(i).getStatus() ;
+					JOptionPane.showMessageDialog(f,S);
+
+					//break;
+					
+				}
+			}
+			if(match == 0)
+			{
+				JOptionPane.showMessageDialog(f,"You have No Messages");
+			}
+			
+		}
 		
 		else if(ae.getSource() == ReqTest){
 			
@@ -456,6 +488,7 @@ class GUI implements ActionListener {
 					R.setRType("Test");
 					R.setRApproval("No");
 					R.setStatus("Pending for Approval");
+					R.setRtestname(testlist.getSelectedItem().toString());
 					session.save(R);
 //					Appt.setDOCID(result.get(i).getDocId());
 //					this.updateView(Appt.getDOCID(), Appt.getPatientID());
