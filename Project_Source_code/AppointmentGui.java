@@ -26,6 +26,7 @@ public class AppointmentGui implements ActionListener {
 	JLabel DocSearch;
 
 	Font newFont;
+	int[] slotsArr = new int[1024];
 	String[] options = new String[1024];
 	JComboBox<String> list;
 	Appointment Appt = new Appointment();
@@ -33,7 +34,7 @@ public class AppointmentGui implements ActionListener {
     {
     	Appt.setPatientID(_patID);
     	A = new JFrame("MyHealth----->Make Appointment");
-		A.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		A.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		A.setSize(600, 600);
 		
 		panel=new JPanel();
@@ -102,10 +103,22 @@ public class AppointmentGui implements ActionListener {
 		if(ae.getSource() == selectSlot)
 		{
 			Appt.setAppointmentDetails(list.getSelectedItem().toString());
+			int n = list.getSelectedIndex();
+			Appt.setSlotnum(slotsArr[n]);
 			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 			Session session = sessionFactory.openSession();
 			session.beginTransaction();	
 			session.save(Appt);
+			@SuppressWarnings({ "unchecked", "deprecation" })
+			List<Slots> result = (List<Slots>) session.createQuery("from Slots").list();
+			for(int i = 0; i< result.size();i++)
+			{
+				if(result.get(i).getSlotNum() == Appt.getSlotnum())
+				{
+					session.delete(result.get(i));
+					
+				}
+			}
 			session.getTransaction().commit();
 			session.close();
 			sessionFactory.close();
@@ -128,6 +141,7 @@ public class AppointmentGui implements ActionListener {
 			if(result.get(i).getDocId() == _docID)
 			{
 				options[k]= (result.get(i).getDay() + " " + result.get(i).getStart_time() + " - " + result.get(i).getEnd_time());
+				slotsArr[k] = result.get(i).getSlotNum();
 				k++;
 				System.out.println("k");
 				

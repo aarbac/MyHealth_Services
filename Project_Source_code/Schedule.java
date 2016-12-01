@@ -37,7 +37,7 @@ public class Schedule implements ActionListener{
 	{
 		CurrDoc = _DoctorID;
 		s = new JFrame("MyHealth----->Create Schedule");
-		s.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		s.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		s.setSize(600, 600);
 		
 		panel=new JPanel();
