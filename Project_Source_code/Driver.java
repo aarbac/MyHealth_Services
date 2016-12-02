@@ -63,11 +63,15 @@ class GUI implements ActionListener {
 	JButton CreatebuttonP;
 	JButton Appointment;
 	JButton sch;
+	JButton subres;
+	JButton subbill;
 	JButton ReqTest;
 	JButton viewBill;
 	JButton selectTest;
 	JButton viewMessages;
 	JButton Approve;
+	JTextField textFieldDocIDinput = new JTextField(15);
+	JTextField textFieldPatIDinput = new JTextField(15);
 	JTextField textFieldUserName = new JTextField(15);
 	JTextField textFieldFirstName = new JTextField(15);
 	JTextField textFieldLastName = new JTextField(15);
@@ -166,6 +170,37 @@ class GUI implements ActionListener {
 			Approve.setFont(newFont);
 			panel.add(Approve);
 			Approve.addActionListener(this);
+			
+		}
+		//Create Submit Buttons
+		if(_usertype.equals("Clerk"))
+		{	
+			subres= new JButton("Submit Results");
+			subres.setBounds(200,325, 200,25);
+			subres.setFont(newFont);
+			panel.add(subres);
+			subres.addActionListener(this);
+			subbill= new JButton("Submit Bills");
+			subbill.setBounds(425,325, 200,25);
+			subbill.setFont(newFont);
+			panel.add(subbill);
+			subbill.addActionListener(this);
+			JLabel PatientID = new JLabel();
+			PatientID.setText("Enter Patient ID");
+			PatientID.setBounds(300, 500, 200, 30);
+			panel.add(PatientID);
+			PatientID.setFont(newFont);
+			textFieldPatIDinput.setBounds(475, 500, 200, 30);
+			textFieldPatIDinput.setFont(newFont);
+			panel.add(textFieldPatIDinput);
+			JLabel DoctorID = new JLabel();
+			DoctorID.setText("Enter Doctor ID");
+			DoctorID.setBounds(300, 600, 200, 30);
+			panel.add(DoctorID);
+			DoctorID.setFont(newFont);
+			textFieldDocIDinput.setBounds(475, 600, 200, 30);
+			textFieldDocIDinput.setFont(newFont);
+			panel.add(textFieldDocIDinput);
 			
 		}
 	//	Appointment.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -415,6 +450,10 @@ class GUI implements ActionListener {
 			
 			f.dispose();
 			this.createProfileGui();
+			
+		}
+		if(ae.getSource() == subres){
+			
 			
 		}
 		
