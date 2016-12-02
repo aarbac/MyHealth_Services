@@ -20,7 +20,9 @@ import java.util.List;
 //Hibernate Libraries
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 //import org.hibernate.query.Query;
 
 public class Driver {
@@ -65,6 +67,7 @@ class GUI implements ActionListener {
 	JButton viewBill;
 	JButton selectTest;
 	JButton viewMessages;
+	JButton Approve;
 	JTextField textFieldUserName = new JTextField(15);
 	JTextField textFieldFirstName = new JTextField(15);
 	JTextField textFieldLastName = new JTextField(15);
@@ -76,6 +79,7 @@ class GUI implements ActionListener {
 	JTextField textFieldAddress = new JTextField(50);
 	JCheckBox checkboxpatient = new JCheckBox("Patient");
 	JCheckBox checkboxdoctor = new JCheckBox("Doctor");
+	JCheckBox checkboxclerk = new JCheckBox("Clerk");
 	String[] options = {"Male","Female","Other"};
 	JComboBox<String> list = new JComboBox<String>(options);
 	String[] Testoptions = {"Blood Test","MRI Scan","Ultrasound","X-Ray","Skin Test"};
@@ -129,8 +133,8 @@ class GUI implements ActionListener {
 			viewBill.setBounds(525,325, 200,25);
 			viewBill.setFont(newFont);
 			panel.add(viewBill);
-
-				
+			Appointment.addActionListener(this);
+			ReqTest.addActionListener(this);
 			
 		}	
 		//Messages
@@ -152,17 +156,24 @@ class GUI implements ActionListener {
 		//Create schedule Button
 		if(_usertype.equals("Doctor"))
 		{	
-			sch= new JButton("Sch");
-			sch.setBounds(500,325, 30,25);
+			sch= new JButton("Create Schedule");
+			sch.setBounds(200,325, 200,25);
+			sch.setFont(newFont);
 			panel.add(sch);
 			sch.addActionListener(this);
+			Approve= new JButton("Approve Test");
+			Approve.setBounds(400,325, 200,25);
+			Approve.setFont(newFont);
+			panel.add(Approve);
+			Approve.addActionListener(this);
+			
 		}
 	//	Appointment.setHorizontalTextPosition(SwingConstants.RIGHT);
 	//	Appointment.setIconTextGap(4);
 		f.setVisible(true);
-		Appointment.addActionListener(this);
-		ReqTest.addActionListener(this);
-		viewBill.addActionListener(this);
+
+
+//		viewBill.addActionListener(this);
 		viewMessages.addActionListener(this);
 		
 		
@@ -305,7 +316,7 @@ class GUI implements ActionListener {
 		panel.add(checkboxdoctor);
 		
 		// Clerk Check Box
-		JCheckBox checkboxclerk = new JCheckBox("Clerk");
+		checkboxclerk = new JCheckBox("Clerk");
 		checkboxclerk.setBounds(650, 300, 200, 30);
 		checkboxclerk.setFont(newFont);
 		panel.add(checkboxclerk);
@@ -406,6 +417,73 @@ class GUI implements ActionListener {
 			this.createProfileGui();
 			
 		}
+		
+		if(ae.getSource() == Approve){
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			@SuppressWarnings({ "unchecked", "deprecation" })
+			List<Records> result = (List<Records>) session.createQuery("from Records").list();
+			int match = 0;
+			String S;
+			for(int i = 0; i< result.size();i++)
+			{
+				if(result.get(i).getRDocId() == (CurrentID))
+				{
+					match = 1;
+					S = result.get(i).getRType() + ":" + result.get(i).getRtestname() + " " + result.get(i).getStatus() + " for Patient " + result.get(i).getRPatId() ;
+					if(result.get(i).getRApproval().equals("No"))
+					{
+						int n = JOptionPane.showConfirmDialog(
+							    f, S,"Approve?", 
+							    JOptionPane.YES_NO_OPTION);
+						System.out.println(n);
+						if(n == 0)
+						{
+							//result.get(i).setRApproval("Yes");
+							//session.update(result.get(i));
+//							Transaction tx = session.beginTransaction();
+							String Ses = "update Records set RApproval = 'Yes' " + "where RecordId = " + (i+1);
+							Query query = session.createQuery(Ses);
+							query.executeUpdate();
+							Ses = "update Records set Status = 'Approved' " + "where RecordId = " + (i+1);
+							query = session.createQuery(Ses);
+							query.executeUpdate();
+							
+//							tx.commit();
+							
+						}
+						else if(n == 1)
+						{
+							//result.get(i).setRApproval("Yes");
+							//session.update(result.get(i));
+//							Transaction tx = session.beginTransaction();
+							String Ses = "update Records set RApproval = 'No' " + "where RecordId = " + (i+1);
+							Query query = session.createQuery(Ses);
+							query.executeUpdate();
+							Ses = "update Records set Status = 'Denied' " + "where RecordId = " + (i+1);
+							query = session.createQuery(Ses);
+							query.executeUpdate();
+							
+//							tx.commit();
+							
+						}
+						
+					}
+					
+					
+
+					//break;
+					
+				}
+			}
+			session.getTransaction().commit();
+			session.close();
+			sessionFactory.close();	
+
+			 			
+		}
+
 		else if(ae.getSource() == viewMessages){
 			
 			
@@ -425,11 +503,25 @@ class GUI implements ActionListener {
 					match = 1;
 					S = result.get(i).getRType() + ":" + result.get(i).getRtestname() + " " + result.get(i).getStatus() ;
 					JOptionPane.showMessageDialog(f,S);
+					
+					//break;
+					
+				}
+			}
+			
+			for(int i = 0; i< result.size();i++)
+			{
+				if(result.get(i).getRDocId()== (CurrentID))
+				{
+					match = 1;
+					S = result.get(i).getRType() + ":" + result.get(i).getRtestname() + " " + result.get(i).getStatus() + " for Patient " + result.get(i).getRPatId() ;
+					JOptionPane.showMessageDialog(f,S);
 
 					//break;
 					
 				}
 			}
+		
 			if(match == 0)
 			{
 				JOptionPane.showMessageDialog(f,"You have No Messages");
@@ -546,6 +638,21 @@ class GUI implements ActionListener {
 			{
 				Type = "Doctor";
 				P = new Doctor();
+				library.add(P);
+				P.setFirstname(textFieldFirstName.getText());
+				P.setLastname(textFieldLastName.getText());
+				P.setAge(textFieldAge.getText());
+				P.setLocation(textFieldAddress.getText());
+				P.setPhoneNo(textFieldphoneNum.getText());
+				//P.setSecurityAnswer(securityAnswer);
+				P.setGender(list.getSelectedItem().toString());
+				System.out.println(P.getGender());
+				System.out.println(P.getFirstname());
+			}
+			else if(checkboxclerk.isSelected())
+			{
+				Type = "Clerk";
+				P = new Clerk();
 				library.add(P);
 				P.setFirstname(textFieldFirstName.getText());
 				P.setLastname(textFieldLastName.getText());
