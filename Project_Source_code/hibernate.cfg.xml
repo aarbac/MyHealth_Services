@@ -35,6 +35,8 @@
  		<mapping class="Slots"/>
  		<mapping class="Appointment"/>
  		<mapping class="Records"/>
+ 		<mapping class="Bills"/>
+ 		<mapping class="CreditCards"/>
  		 
     </session-factory>
 </hibernate-configuration>

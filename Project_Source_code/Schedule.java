@@ -27,8 +27,12 @@ public class Schedule implements ActionListener{
 	JTextField textFieldStarttime2 = new JTextField(15);
 	JTextField textFieldEndtime = new JTextField(15);
 	JTextField textFieldEndtime2 = new JTextField(15);
-	String[] options = {"MON","TUE","WED","THU","FRI","SAT","SUN"};
-	JComboBox<String> list = new JComboBox<String>(options);
+	String[] dayoptions = new String[32];
+	JComboBox<String> daylist;
+	String[] monthoptions = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
+	JComboBox<String> monthlist = new JComboBox<String>(monthoptions);
+	String[] yearoptions = {"2016","2017"};
+	JComboBox<String> yearlist = new JComboBox<String>(yearoptions);
 	JButton add;
 	private JFrame s;
 	private JPanel panel;
@@ -48,18 +52,13 @@ public class Schedule implements ActionListener{
 		
 //WEEK 1	
 		JLabel Week1 = new JLabel();
-		Week1.setText("WEEK 1");
+		Week1.setText("Day");
 		Week1.setBounds(100, 100, 150, 25);
 		Font currentFont = Week1.getFont();
 		Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
 		panel.add(Week1);
 		Week1.setFont(newFont);
-//WEEK 2		
-		JLabel Week2 = new JLabel();
-		Week2.setText("WEEK 2");
-		Week2.setBounds(100, 300, 150, 25);
-		panel.add(Week2);
-		Week2.setFont(newFont);
+
 //Add to schedule
 		add = new JButton("Add to Schedule");
 		panel.add(add);
@@ -69,59 +68,47 @@ public class Schedule implements ActionListener{
 //Start Time
 		JLabel StartTime = new JLabel();
 		StartTime.setText("START TIME");
-		StartTime.setBounds(250, 100, 150, 25);
+		StartTime.setBounds(50, 300, 150, 25);
 		panel.add(StartTime);
 		StartTime.setFont(newFont);
 		
-		JLabel StartTime2 = new JLabel();
-		StartTime2.setText("START TIME");
-		StartTime2.setBounds(250, 300, 150, 25);
-		panel.add(StartTime2);
-		StartTime2.setFont(newFont);
 		
 //END TIME	
 		JLabel EndTime = new JLabel();
 		EndTime.setText("END TIME");
-		EndTime.setBounds(400, 100, 150, 25);
+		EndTime.setBounds(50, 400, 150, 25);
 		panel.add(EndTime);
 		EndTime.setFont(newFont);
 		
-		JLabel EndTime2 = new JLabel();
-		EndTime2.setText("END TIME");
-		EndTime2.setBounds(400, 300, 150, 25);
-		panel.add(EndTime2);
-		EndTime2.setFont(newFont);
 //Start Time Entry
-		textFieldStarttime.setBounds(250, 150, 125, 30);
+		textFieldStarttime.setBounds(250, 300, 150, 30);
 		textFieldStarttime.setFont(newFont);
 		panel.add(textFieldStarttime);
 		
 //End Time Entry
-		textFieldEndtime.setBounds(400, 150, 125, 30);
+		textFieldEndtime.setBounds(250, 400, 150, 30);
 		textFieldEndtime.setFont(newFont);
 		panel.add(textFieldEndtime);
 		
-//Start Time Entry2
-		textFieldStarttime2.setBounds(250, 350, 125, 30);
-		textFieldStarttime2.setFont(newFont);
-		panel.add(textFieldStarttime2);
-		
-//End Time Entry2
-		textFieldEndtime2.setBounds(400, 350, 125, 30);
-		textFieldEndtime2.setFont(newFont);
-		panel.add(textFieldEndtime2);
 		
 //Day Drop Down
+		for(int i=1; i<dayoptions.length;i++)
+		{
+			dayoptions[i] = Integer.toString(i);
+		}
+		daylist = new JComboBox<String>(dayoptions);
+		daylist.setBounds(25, 150, 75, 30);
+		daylist.setFont(newFont);
+		panel.add(daylist);
+	
+		monthlist.setBounds(125, 150, 75, 30);
+		monthlist.setFont(newFont);
+		panel.add(monthlist);
 		
-		list.setBounds(100, 150, 100, 30);
-		list.setFont(newFont);
-		panel.add(list);
+		yearlist.setBounds(225, 150, 100, 30);
+		yearlist.setFont(newFont);
+		panel.add(yearlist);
 		
-//Day Drop Down
-		JComboBox<String> list2 = new JComboBox<String>(options);
-		list2.setBounds(100, 350, 100, 30);
-		list2.setFont(newFont);
-		panel.add(list2);
 		add.addActionListener(this);
 		s.setVisible(true);
 		System.out.println("AAAAAAA");
@@ -135,7 +122,7 @@ public class Schedule implements ActionListener{
 			Slots S = new Slots();
 			S.setStart_time(textFieldStarttime.getText());
 			S.setEnd_time(textFieldEndtime.getText());
-			S.setDay(list.getSelectedItem().toString());
+			S.setDay(daylist.getSelectedItem().toString() + "-" + monthlist.getSelectedItem().toString() + "-" + yearlist.getSelectedItem().toString()  );
 			S.setDocId(CurrDoc);
 //Test if working
 			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();

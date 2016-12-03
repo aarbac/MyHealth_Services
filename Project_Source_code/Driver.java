@@ -30,6 +30,20 @@ public class Driver {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		CreditCards C = new CreditCards();
+		C.setCardNum("1234123412341234");
+		C.setCardName("Harshil Sheth");
+		C.setCVV("123");
+		C.setAddress("asdgjsavdjhvb");
+		C.setExpirydate("Jan 2019");
+		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		session.save(C);
+		session.getTransaction().commit();
+		session.close();
+		sessionFactory.close();
+		
 		new GUI();
 		//ArrayList<Person> library = new ArrayList<Person>();
 
@@ -49,6 +63,7 @@ class GUI implements ActionListener {
 
 	ArrayList<Person> library = new ArrayList<Person>();
 	private JFrame f;
+	JFrame jbill;
 	private JTextField textFieldusrname;
 	private JTextField textFieldpsswrd;
 	private JLabel jlabelusrname;
@@ -56,6 +71,7 @@ class GUI implements ActionListener {
 	private JLabel jlabelmsg;
 	private JPanel panel;
 	private JLabel DocSearch;
+	JButton PayBill;
 	JTextField textFieldDocName = new JTextField(15);
 	JButton Createbutton;
 	JButton Loginbutton;
@@ -70,6 +86,9 @@ class GUI implements ActionListener {
 	JButton selectTest;
 	JButton viewMessages;
 	JButton Approve;
+	JButton Approvebill;
+	JTextField textFieldcardNum;
+	JTextField textFieldTestinput = new JTextField(15);
 	JTextField textFieldDocIDinput = new JTextField(15);
 	JTextField textFieldPatIDinput = new JTextField(15);
 	JTextField textFieldUserName = new JTextField(15);
@@ -90,6 +109,7 @@ class GUI implements ActionListener {
 	JComboBox<String> testlist= new JComboBox<String>(Testoptions);
 	Font newFont;
 	int CurrentID;
+	int billId;
 	public void HomePageGui(int PersonID, String _usertype)
 	{
 		CurrentID = PersonID;
@@ -139,11 +159,11 @@ class GUI implements ActionListener {
 			panel.add(viewBill);
 			Appointment.addActionListener(this);
 			ReqTest.addActionListener(this);
-			
+			viewBill.addActionListener(this);
 		}	
 		//Messages
 		viewMessages = new JButton("Messages");
-		viewMessages.setBounds(750,325, 200,25);
+		viewMessages.setBounds(800,325, 200,25);
 		newFont = viewMessages.getFont().deriveFont(viewMessages.getFont().getSize() * 1.4F);
 		viewMessages.setFont(newFont);
 		panel.add(viewMessages);
@@ -170,6 +190,11 @@ class GUI implements ActionListener {
 			Approve.setFont(newFont);
 			panel.add(Approve);
 			Approve.addActionListener(this);
+			Approvebill= new JButton("Approve Bills");
+			Approvebill.setBounds(600,325, 200,25);
+			Approvebill.setFont(newFont);
+			panel.add(Approvebill);
+			Approvebill.addActionListener(this);
 			
 		}
 		//Create Submit Buttons
@@ -185,6 +210,7 @@ class GUI implements ActionListener {
 			subbill.setFont(newFont);
 			panel.add(subbill);
 			subbill.addActionListener(this);
+			
 			JLabel PatientID = new JLabel();
 			PatientID.setText("Enter Patient ID");
 			PatientID.setBounds(300, 500, 200, 30);
@@ -193,6 +219,7 @@ class GUI implements ActionListener {
 			textFieldPatIDinput.setBounds(475, 500, 200, 30);
 			textFieldPatIDinput.setFont(newFont);
 			panel.add(textFieldPatIDinput);
+			
 			JLabel DoctorID = new JLabel();
 			DoctorID.setText("Enter Doctor ID");
 			DoctorID.setBounds(300, 600, 200, 30);
@@ -202,6 +229,14 @@ class GUI implements ActionListener {
 			textFieldDocIDinput.setFont(newFont);
 			panel.add(textFieldDocIDinput);
 			
+			JLabel Testtype = new JLabel();
+			Testtype.setText("Enter Test type");
+			Testtype.setBounds(300, 700, 200, 30);
+			panel.add(Testtype);
+			Testtype.setFont(newFont);
+			testlist.setBounds(475, 700, 200, 30);
+			testlist.setFont(newFont);
+			panel.add(testlist);
 		}
 	//	Appointment.setHorizontalTextPosition(SwingConstants.RIGHT);
 	//	Appointment.setIconTextGap(4);
@@ -452,9 +487,259 @@ class GUI implements ActionListener {
 			this.createProfileGui();
 			
 		}
+		if(ae.getSource() == PayBill){
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			int cardValid = 0;
+			@SuppressWarnings({ "unchecked", "deprecation" })
+			List<CreditCards> result = (List<CreditCards>) session.createQuery("from CreditCards").list();
+			for(int i = 0; i< result.size();i++)
+			{
+				if(result.get(i).getCardNum().equals(textFieldcardNum.getText()))
+				{
+					cardValid = 1;
+					break;
+				}
+			}	
+			if(cardValid == 1 )
+			{	
+				System.out.println("Match ");
+				String Ses = "update Bills set BPaid = 'Yes' " + "where BillId = " + billId;
+				@SuppressWarnings("rawtypes")
+				Query query = session.createQuery(Ses);
+				query.executeUpdate();	
+				String Ses2 = "update Bills set BStatus = 'Bills Paid' " + "where BillId = " + billId;
+				@SuppressWarnings("rawtypes")
+				Query query2 = session.createQuery(Ses2);
+				query2.executeUpdate();
+				JOptionPane.showMessageDialog(jbill,"Thank You for the Payment");
+				jbill.dispose();
+				
+
+			}
+			if(cardValid == 0)
+			{
+				JOptionPane.showMessageDialog(jbill,"Invalid Card Details");
+				jbill.dispose();
+			}
+			session.getTransaction().commit();
+			session.close();
+			sessionFactory.close();	
+			
+		}
+		if(ae.getSource() == viewBill){
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			@SuppressWarnings({ "unchecked", "deprecation" })
+			List<Bills> result = (List<Bills>) session.createQuery("from Bills").list();
+			int match = 0;
+			String S;
+			for(int i = 0; i< result.size();i++)
+			{
+				if(result.get(i).getBPatId() == (CurrentID))
+				{
+					
+					
+					if(result.get(i).getBApproval().equals("Approved") && result.get(i).getBPaid().equals("No") )
+					{
+						match = 1;
+						S = "Amount " + result.get(i).getBAmount() + " for test: " + result.get(i).getTestType() + " pending for Payment" ;
+						int n = JOptionPane.showConfirmDialog(
+							    f, S,"Pay Now??", 
+							    JOptionPane.YES_NO_OPTION);
+						System.out.println(n);
+						if(n == 0)
+						{
+							//result.get(i).setRApproval("Yes");
+							//session.update(result.get(i));
+//							Transaction tx = session.beginTransaction();
+							jbill = new JFrame("Payment Page");
+							jbill.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+							jbill.setSize(600, 600);
+							JPanel panelbill = new JPanel();
+							panelbill.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
+							//GroupLayout layout = new GroupLayout( panel );
+							panelbill.setLayout( null );
+							jbill.add(panelbill);
+							JLabel JcardNum = new JLabel();
+							JcardNum.setText("Enter Card Number");
+							JcardNum.setBounds(10, 100, 200, 30);
+							JcardNum.setFont(newFont);
+							panelbill.add(JcardNum); 
+							textFieldcardNum = new JTextField(15);
+							textFieldcardNum.setBounds(350, 100, 200, 30);
+							textFieldcardNum.setFont(newFont);
+							panelbill.add(textFieldcardNum);
+							
+							JLabel JcardName = new JLabel();
+							JcardName.setText("Enter Name on Card");
+							JcardName.setBounds(10, 200, 200, 30);
+							JcardName.setFont(newFont);
+							panelbill.add(JcardName); 
+							JTextField textFieldcardName = new JTextField(15);
+							textFieldcardName.setBounds(350, 200, 200, 30);
+							textFieldcardName.setFont(newFont);
+							panelbill.add(textFieldcardName);
+							
+							JLabel Jcardcvv = new JLabel();
+							Jcardcvv.setText("CVV");
+							Jcardcvv.setBounds(10, 300, 200, 30);
+							Jcardcvv.setFont(newFont);
+							panelbill.add(Jcardcvv); 
+							JTextField textFieldcardcvv = new JTextField(15);
+							textFieldcardcvv.setBounds(350, 300, 200, 30);
+							textFieldcardcvv.setFont(newFont);
+							panelbill.add(textFieldcardcvv);
+							
+							JLabel Jcardexpiry = new JLabel();
+							Jcardexpiry.setText("Card Expiry Date");
+							Jcardexpiry.setBounds(10, 400, 200, 30);
+							Jcardexpiry.setFont(newFont);
+							panelbill.add(Jcardexpiry); 
+							JTextField textFieldcardexpiry = new JTextField(15);
+							textFieldcardexpiry.setBounds(350, 400, 200, 30);
+							textFieldcardexpiry.setFont(newFont);
+							panelbill.add(textFieldcardexpiry);
+							PayBill = new JButton("Pay Bill");
+							PayBill.setBounds(250, 500, 200, 30);
+							PayBill.setFont(newFont);
+							PayBill.addActionListener(this);
+							panelbill.add(PayBill);
+							jbill.setVisible(true);
+							billId = i+1;
+//							tx.commit();
+							
+						}
+						else if(n == 1)
+						{
+							//result.get(i).setRApproval("Yes");
+							//session.update(result.get(i));
+//							Transaction tx = session.beginTransaction();
+							String Ses = "update Bills set BApproval = 'Denied' " + "where BillId = " + (i+1);
+							@SuppressWarnings("rawtypes")
+							Query query = session.createQuery(Ses);
+							query.executeUpdate();
+							
+//							tx.commit();
+							
+						}
+						
+					}
+					
+					
+
+					//break;
+					
+				}
+			}
+			session.getTransaction().commit();
+			session.close();
+			sessionFactory.close();	
+			if(match ==0)
+			{
+				JOptionPane.showMessageDialog(f,"You have no Pending Bills");
+			}
+			
+		}
+		if(ae.getSource() == Approvebill){
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			@SuppressWarnings({ "unchecked", "deprecation" })
+			List<Bills> result = (List<Bills>) session.createQuery("from Bills").list();
+			int match = 0;
+			String S;
+			for(int i = 0; i< result.size();i++)
+			{
+				if(result.get(i).getBDocId() == (CurrentID))
+				{
+					match = 1;
+					
+					if(result.get(i).getBApproval().equals("No"))
+					{
+						S = "Amount " + result.get(i).getBAmount() + " for PatientID: " + result.get(i).getBPatId() + " pending for Approval" ;
+						int n = JOptionPane.showConfirmDialog(
+							    f, S,"Approve?", 
+							    JOptionPane.YES_NO_OPTION);
+						System.out.println(n);
+						if(n == 0)
+						{
+							//result.get(i).setRApproval("Yes");
+							//session.update(result.get(i));
+//							Transaction tx = session.beginTransaction();
+							String Ses = "update Bills set BApproval = 'Approved' " + "where BillId = " + (i+1);
+							@SuppressWarnings("rawtypes")
+							Query query = session.createQuery(Ses);
+							query.executeUpdate();							
+//							tx.commit();
+							
+						}
+						else if(n == 1)
+						{
+							//result.get(i).setRApproval("Yes");
+							//session.update(result.get(i));
+//							Transaction tx = session.beginTransaction();
+							String Ses = "update Bills set BApproval = 'Denied' " + "where BillId = " + (i+1);
+							@SuppressWarnings("rawtypes")
+							Query query = session.createQuery(Ses);
+							query.executeUpdate();
+							
+//							tx.commit();
+							
+						}
+						
+					}
+					
+					
+
+					//break;
+					
+				}
+			}
+			session.getTransaction().commit();
+			session.close();
+			sessionFactory.close();	
+
+			
+			
+		}
 		if(ae.getSource() == subres){
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			Records result = new Records();
+			result.setRApproval("NA");
+			result.setRDocId(Integer.parseInt(textFieldDocIDinput.getText()));
+			result.setRPatId(Integer.parseInt(textFieldPatIDinput.getText()));
+			result.setRType("Results");
+			result.setRtestname(testlist.getSelectedItem().toString());
+			result.setStatus("Results Uploaded");
+			session.save(result);
+			session.getTransaction().commit();
+			session.close();
+			sessionFactory.close();
+		}
+		if(ae.getSource() == subbill){
+			float Amount = new Float("20.75f");
 			
-			
+			Amount = Float.parseFloat(JOptionPane.showInputDialog("Enter Amount"));
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			Bills bills = new Bills();
+			bills.setBApproval("No");
+			bills.setBDocId(Integer.parseInt(textFieldDocIDinput.getText()));
+			bills.setBPatId(Integer.parseInt(textFieldPatIDinput.getText()));
+			bills.setTestType(testlist.getSelectedItem().toString());
+			bills.setBStatus("Bills Uploaded");
+			bills.setBPaid("No");
+			bills.setBAmount(Amount);
+			session.save(bills);
+			session.getTransaction().commit();
+			session.close();
+			sessionFactory.close();
 		}
 		
 		if(ae.getSource() == Approve){
