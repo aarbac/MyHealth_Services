@@ -87,6 +87,7 @@ class GUI implements ActionListener {
 	JButton viewMessages;
 	JButton Approve;
 	JButton Approvebill;
+	JButton viewAppt;
 	JTextField textFieldcardNum;
 	JTextField textFieldTestinput = new JTextField(15);
 	JTextField textFieldDocIDinput = new JTextField(15);
@@ -195,6 +196,15 @@ class GUI implements ActionListener {
 			Approvebill.setFont(newFont);
 			panel.add(Approvebill);
 			Approvebill.addActionListener(this);
+			
+		}
+		if(!_usertype.equals("Clerk"))
+		{
+			viewAppt= new JButton("View Appointments");
+			viewAppt.setBounds(500,525, 200,25);
+			viewAppt.setFont(newFont);
+			panel.add(viewAppt);
+			viewAppt.addActionListener(this);
 			
 		}
 		//Create Submit Buttons
@@ -485,6 +495,38 @@ class GUI implements ActionListener {
 			
 			f.dispose();
 			this.createProfileGui();
+			
+		}
+		if(ae.getSource() == viewAppt){
+			
+			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+			Session session = sessionFactory.openSession();
+			session.beginTransaction();
+			int noAppts = 0;
+			@SuppressWarnings({ "unchecked", "deprecation" })
+			List<Appointment> result = (List<Appointment>) session.createQuery("from Appointment").list();
+			for(int i = 0; i< result.size();i++)
+			{
+				if(result.get(i).getDOCID() == CurrentID)
+				{
+					noAppts = 1;
+					String S = "Appointment with Patient: " + result.get(i).getPatientID() + " on " + result.get(i).AppointmentDetails ;
+					JOptionPane.showMessageDialog(f,S);
+		
+				}
+				if(result.get(i).getPatientID() == CurrentID)
+				{
+					noAppts = 1;
+					String S = "Appointment with Doctor: " + result.get(i).getDOCID() + " on " + result.get(i).AppointmentDetails ;
+					JOptionPane.showMessageDialog(f,S);
+				}
+			}
+			if(noAppts == 0)
+			{
+				noAppts = 1;
+				JOptionPane.showMessageDialog(f,"You have no appointments");
+			}
+	
 			
 		}
 		if(ae.getSource() == PayBill){

@@ -122,6 +122,8 @@ public class AppointmentGui implements ActionListener {
 			session.getTransaction().commit();
 			session.close();
 			sessionFactory.close();
+			JOptionPane.showMessageDialog(A,"Appointment Booked successfully");
+			A.dispose();
 		}
 	}
 	
