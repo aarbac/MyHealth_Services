@@ -505,19 +505,22 @@ class GUI implements ActionListener {
 			int noAppts = 0;
 			@SuppressWarnings({ "unchecked", "deprecation" })
 			List<Appointment> result = (List<Appointment>) session.createQuery("from Appointment").list();
+			session.close();
+			sessionFactory.close();	
+			DBHandler Db = new DBHandler();
 			for(int i = 0; i< result.size();i++)
 			{
 				if(result.get(i).getDOCID() == CurrentID)
 				{
 					noAppts = 1;
-					String S = "Appointment with Patient: " + result.get(i).getPatientID() + " on " + result.get(i).AppointmentDetails ;
+					String S = "Appointment with Patient: " + Db.getpatientbyid(result.get(i).getPatientID()) + " on " + result.get(i).AppointmentDetails ;
 					JOptionPane.showMessageDialog(f,S);
 		
 				}
 				if(result.get(i).getPatientID() == CurrentID)
 				{
 					noAppts = 1;
-					String S = "Appointment with Doctor: " + result.get(i).getDOCID() + " on " + result.get(i).AppointmentDetails ;
+					String S = "Appointment with Doctor: " + Db.getdoctorbyid(result.get(i).getDOCID()) + " on " + result.get(i).AppointmentDetails ;
 					JOptionPane.showMessageDialog(f,S);
 				}
 			}
