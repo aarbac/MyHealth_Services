@@ -133,14 +133,14 @@ class GUI implements ActionListener {
 		if(_usertype.equals("Patient"))
 		{	
 			JLabel Appt = new JLabel();
-			Appt.setText("Appointment");
-			Appt.setBounds(100, 325, 150, 25);
+			Appt.setText("Book Appointment");
+			Appt.setBounds(100, 325, 200, 25);
 			Font currentFont = Appt.getFont();
 			newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
 			panel.add(Appt);
 			Appt.setFont(newFont);
 			Appointment= new JButton();
-			Appointment.setBounds(230,325, 30,25);
+			Appointment.setBounds(300,325, 30,25);
 		//	Appointment.setHorizontalTextPosition(SwingConstants.RIGHT);
 		//	Appointment.setIconTextGap(4);
 		//	panel.add(Appointment);
@@ -150,12 +150,12 @@ class GUI implements ActionListener {
 			panel.add(Appointment);
 //Request Test
 			ReqTest= new JButton("Request Test");
-			ReqTest.setBounds(300,325, 200,25);
+			ReqTest.setBounds(400,425, 250,25);
 			ReqTest.setFont(newFont);
 			panel.add(ReqTest);
 //View Bill
 			viewBill= new JButton("View Bills");
-			viewBill.setBounds(525,325, 200,25);
+			viewBill.setBounds(400,525, 250,25);
 			viewBill.setFont(newFont);
 			panel.add(viewBill);
 			Appointment.addActionListener(this);
@@ -164,7 +164,7 @@ class GUI implements ActionListener {
 		}	
 		//Messages
 		viewMessages = new JButton("Messages");
-		viewMessages.setBounds(800,325, 200,25);
+		viewMessages.setBounds(750,325, 200,25);
 		newFont = viewMessages.getFont().deriveFont(viewMessages.getFont().getSize() * 1.4F);
 		viewMessages.setFont(newFont);
 		panel.add(viewMessages);
@@ -201,7 +201,7 @@ class GUI implements ActionListener {
 		if(!_usertype.equals("Clerk"))
 		{
 			viewAppt= new JButton("View Appointments");
-			viewAppt.setBounds(500,525, 200,25);
+			viewAppt.setBounds(400,325, 250,25);
 			viewAppt.setFont(newFont);
 			panel.add(viewAppt);
 			viewAppt.addActionListener(this);
@@ -478,7 +478,7 @@ class GUI implements ActionListener {
 		
 		
 		Forgotbutton = new JButton("Forgot Password?");
-		Forgotbutton.setBounds(550, 700, 200, 30);
+		Forgotbutton.setBounds(550, 700, 250, 30);
 		Forgotbutton.setFont(newFont);
 		panel.add(Forgotbutton);   
 		Createbutton.addActionListener(this);
