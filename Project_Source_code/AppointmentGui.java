@@ -159,7 +159,7 @@ public class AppointmentGui implements ActionListener {
 		panel.add(SlotInfo);
 		SlotInfo.setFont(newFont);
 		list = new JComboBox<String>(options);
-		list.setBounds(250, 300, 200, 30);
+		list.setBounds(200, 300, 300, 30);
 		list.setFont(newFont);
 		panel.add(list);
 		System.out.println("Done2");

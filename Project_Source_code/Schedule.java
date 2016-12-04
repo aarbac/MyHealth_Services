@@ -52,8 +52,8 @@ public class Schedule implements ActionListener{
 		
 //WEEK 1	
 		JLabel Week1 = new JLabel();
-		Week1.setText("Day");
-		Week1.setBounds(100, 100, 150, 25);
+		Week1.setText("Select Date");
+		Week1.setBounds(150, 100, 200, 25);
 		Font currentFont = Week1.getFont();
 		Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
 		panel.add(Week1);
@@ -97,15 +97,15 @@ public class Schedule implements ActionListener{
 			dayoptions[i] = Integer.toString(i);
 		}
 		daylist = new JComboBox<String>(dayoptions);
-		daylist.setBounds(25, 150, 75, 30);
+		daylist.setBounds(50, 150, 75, 30);
 		daylist.setFont(newFont);
 		panel.add(daylist);
 	
-		monthlist.setBounds(125, 150, 75, 30);
+		monthlist.setBounds(150, 150, 75, 30);
 		monthlist.setFont(newFont);
 		panel.add(monthlist);
 		
-		yearlist.setBounds(225, 150, 100, 30);
+		yearlist.setBounds(250, 150, 100, 30);
 		yearlist.setFont(newFont);
 		panel.add(yearlist);
 		

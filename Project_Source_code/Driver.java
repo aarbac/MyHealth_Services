@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 //import java.io.IOException;
 //import javax.imageio.ImageIO;
 import java.util.ArrayList;
@@ -88,6 +89,7 @@ class GUI implements ActionListener {
 	JButton Approve;
 	JButton Approvebill;
 	JButton viewAppt;
+	JButton Logout;
 	JTextField textFieldcardNum;
 	JTextField textFieldTestinput = new JTextField(15);
 	JTextField textFieldDocIDinput = new JTextField(15);
@@ -150,12 +152,12 @@ class GUI implements ActionListener {
 			panel.add(Appointment);
 //Request Test
 			ReqTest= new JButton("Request Test");
-			ReqTest.setBounds(400,425, 250,25);
+			ReqTest.setBounds(25,525, 250,25);
 			ReqTest.setFont(newFont);
 			panel.add(ReqTest);
 //View Bill
 			viewBill= new JButton("View Bills");
-			viewBill.setBounds(400,525, 250,25);
+			viewBill.setBounds(25,625, 250,25);
 			viewBill.setFont(newFont);
 			panel.add(viewBill);
 			Appointment.addActionListener(this);
@@ -173,7 +175,12 @@ class GUI implements ActionListener {
 		home.setBounds(50,325, 30,25);
 	//	Appointment.setHorizontalTextPosition(SwingConstants.RIGHT);
 	//	Appointment.setIconTextGap(4);
-
+		//Logout
+		Logout= new JButton("Logout");
+		Logout.setBounds(800,800, 150,25);
+		Logout.setFont(newFont);
+		panel.add(Logout);
+		Logout.addActionListener(this);
 		Image homeicon = new ImageIcon(this.getClass().getResource("/home.png")).getImage();
 		Image scaledhome = homeicon.getScaledInstance(25, 25,Image.SCALE_SMOOTH);
 		home.setIcon(new ImageIcon(scaledhome) );
@@ -182,17 +189,17 @@ class GUI implements ActionListener {
 		if(_usertype.equals("Doctor"))
 		{	
 			sch= new JButton("Create Schedule");
-			sch.setBounds(200,325, 200,25);
+			sch.setBounds(100,325, 200,25);
 			sch.setFont(newFont);
 			panel.add(sch);
 			sch.addActionListener(this);
 			Approve= new JButton("Approve Test");
-			Approve.setBounds(400,325, 200,25);
+			Approve.setBounds(25,525, 250,25);
 			Approve.setFont(newFont);
 			panel.add(Approve);
 			Approve.addActionListener(this);
 			Approvebill= new JButton("Approve Bills");
-			Approvebill.setBounds(600,325, 200,25);
+			Approvebill.setBounds(25,625, 250,25);
 			Approvebill.setFont(newFont);
 			panel.add(Approvebill);
 			Approvebill.addActionListener(this);
@@ -201,7 +208,7 @@ class GUI implements ActionListener {
 		if(!_usertype.equals("Clerk"))
 		{
 			viewAppt= new JButton("View Appointments");
-			viewAppt.setBounds(400,325, 250,25);
+			viewAppt.setBounds(25,425, 250,25);
 			viewAppt.setFont(newFont);
 			panel.add(viewAppt);
 			viewAppt.addActionListener(this);
@@ -414,10 +421,11 @@ class GUI implements ActionListener {
 		CreatebuttonP.addActionListener(this);
 		f.setVisible(true);
 		
-	}
-
-	public GUI(){
 		
+	}
+	
+	public void loginPage()
+	{
 		f = new JFrame("MyHealth");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setSize(1000, 1000);
@@ -484,6 +492,10 @@ class GUI implements ActionListener {
 		Createbutton.addActionListener(this);
 		Loginbutton.addActionListener(this);
 		f.setVisible(true);
+	}	
+	public GUI(){
+		
+		this.loginPage();
 		
 		
 	}
@@ -495,6 +507,12 @@ class GUI implements ActionListener {
 			
 			f.dispose();
 			this.createProfileGui();
+			
+		}
+		if(ae.getSource() == Logout){
+			
+			f.dispose();
+			this.loginPage();
 			
 		}
 		if(ae.getSource() == viewAppt){
@@ -696,6 +714,7 @@ class GUI implements ActionListener {
 			List<Bills> result = (List<Bills>) session.createQuery("from Bills").list();
 			int match = 0;
 			String S;
+			DBHandler Db = new DBHandler();
 			for(int i = 0; i< result.size();i++)
 			{
 				if(result.get(i).getBDocId() == (CurrentID))
@@ -704,7 +723,7 @@ class GUI implements ActionListener {
 					
 					if(result.get(i).getBApproval().equals("No"))
 					{
-						S = "Amount " + result.get(i).getBAmount() + " for PatientID: " + result.get(i).getBPatId() + " pending for Approval" ;
+						S = "Amount " + result.get(i).getBAmount() + " for Patient: " + Db.getpatientbyid(result.get(i).getBPatId()) + " pending for Approval" ;
 						int n = JOptionPane.showConfirmDialog(
 							    f, S,"Approve?", 
 							    JOptionPane.YES_NO_OPTION);
@@ -767,9 +786,10 @@ class GUI implements ActionListener {
 			sessionFactory.close();
 		}
 		if(ae.getSource() == subbill){
-			float Amount = new Float("20.75f");
+			Double Amount = new Double("20.75f");
+			DecimalFormat df =new DecimalFormat("#.##");
+			Amount = Double.parseDouble(JOptionPane.showInputDialog("Enter Amount"));
 			
-			Amount = Float.parseFloat(JOptionPane.showInputDialog("Enter Amount"));
 			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 			Session session = sessionFactory.openSession();
 			session.beginTransaction();
@@ -780,7 +800,7 @@ class GUI implements ActionListener {
 			bills.setTestType(testlist.getSelectedItem().toString());
 			bills.setBStatus("Bills Uploaded");
 			bills.setBPaid("No");
-			bills.setBAmount(Amount);
+			bills.setBAmount(Double.parseDouble(df.format(Amount)));
 			session.save(bills);
 			session.getTransaction().commit();
 			session.close();
@@ -795,12 +815,13 @@ class GUI implements ActionListener {
 			List<Records> result = (List<Records>) session.createQuery("from Records").list();
 			int match = 0;
 			String S;
+			DBHandler Db = new DBHandler();
 			for(int i = 0; i< result.size();i++)
 			{
 				if(result.get(i).getRDocId() == (CurrentID))
 				{
 					match = 1;
-					S = result.get(i).getRType() + ":" + result.get(i).getRtestname() + " " + result.get(i).getStatus() + " for Patient " + result.get(i).getRPatId() ;
+					S = result.get(i).getRType() + ":" + result.get(i).getRtestname() + " " + result.get(i).getStatus() + " for Patient " + Db.getpatientbyid(result.get(i).getRPatId()) ;
 					if(result.get(i).getRApproval().equals("No"))
 					{
 						int n = JOptionPane.showConfirmDialog(
@@ -865,6 +886,7 @@ class GUI implements ActionListener {
 			sessionFactory.close();
 			int match =0;
 			String S;
+			DBHandler Db = new DBHandler();
 			for(int i = 0; i< result.size();i++)
 			{
 				if(result.get(i).getRPatId()== (CurrentID))
@@ -883,7 +905,7 @@ class GUI implements ActionListener {
 				if(result.get(i).getRDocId()== (CurrentID))
 				{
 					match = 1;
-					S = result.get(i).getRType() + ":" + result.get(i).getRtestname() + " " + result.get(i).getStatus() + " for Patient " + result.get(i).getRPatId() ;
+					S = result.get(i).getRType() + ":" + result.get(i).getRtestname() + " " + result.get(i).getStatus() + " for Patient " + Db.getpatientbyid(result.get(i).getRPatId()) ;
 					JOptionPane.showMessageDialog(f,S);
 
 					//break;

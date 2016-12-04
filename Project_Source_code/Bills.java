@@ -18,8 +18,8 @@ public class Bills {
 	public double getBAmount() {
 		return BAmount;
 	}
-	public void setBAmount(double bAmount) {
-		BAmount = bAmount;
+	public void setBAmount(double string) {
+		BAmount = string;
 	}
 	String TestType;
 	String BApproval;
