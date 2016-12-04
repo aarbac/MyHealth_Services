@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,6 +25,8 @@ public class AppointmentGui implements ActionListener {
 	private JButton searchButton;
 	private JButton selectSlot;
 	JLabel DocSearch;
+	JCheckBox searchbyname;
+	JCheckBox searchbyspecialty;
 
 	Font newFont;
 	int[] slotsArr = new int[1024];
@@ -42,9 +45,22 @@ public class AppointmentGui implements ActionListener {
 		//GroupLayout layout = new GroupLayout( panel );
 		panel.setLayout( null );
 		A.add(panel);
+		
+		// Search by Name Check Box
+		searchbyname = new JCheckBox("Search by Name");
+		searchbyname.setBounds(150, 50, 150, 30);
+		searchbyname.setFont(newFont);
+		panel.add(searchbyname);
+		
+		// Search by Specialty Check Box
+		searchbyspecialty = new JCheckBox("Search by Specialty");
+		searchbyspecialty.setBounds(325, 50, 150, 30);
+		searchbyspecialty.setFont(newFont);
+		panel.add(searchbyspecialty);
+		
 //WEEK 1	
 		DocSearch = new JLabel();
-		DocSearch.setText("Enter the Doctor name");
+		DocSearch.setText("Enter Search Criteria");
 		DocSearch.setBounds(25, 100, 250, 25);
 		Font currentFont = DocSearch.getFont();
 		newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
@@ -68,36 +84,35 @@ public class AppointmentGui implements ActionListener {
     }
     
 	public void actionPerformed(ActionEvent ae){
-		
+
 		if(ae.getSource() == searchButton)
 		{
+			int search_result = 0;
 			String docinput=textFieldinputsearch.getText();
-			SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-			Session session = sessionFactory.openSession();
-			session.beginTransaction();
-			@SuppressWarnings({ "unchecked", "deprecation" })
-			List<Doctor> result = (List<Doctor>) session.createQuery("from Doctor").list();
-			session.close();
-			sessionFactory.close();
-			int match = 0;
-		
-			for(int i =0; i< result.size();i++)
+			if(searchbyname.isSelected())
 			{
-				if(result.get(i).getFirstname().equals(docinput))
-				{
-					match = 1;
-					System.out.println("Doctor Found");
-					Appt.setDOCID(result.get(i).getDocId());
-					this.updateView(Appt.getDOCID(), Appt.getPatientID());
-					break;
-					
-				}
+				SearchbyName search = new SearchbyName();
+				search_result = search.Search(docinput);
 			}
-			if(match == 0)
+			else if(searchbyspecialty.isSelected())
 			{
-				JOptionPane.showMessageDialog(A,"No entry Found");
+				SearchbySpecialty search = new SearchbySpecialty();
+				search_result = search.Search(docinput);
 			}
-			
+			else
+			{
+				JOptionPane.showMessageDialog(A, "Select Search Option");
+			}
+			System.out.println("ID found" + search_result);
+			if(search_result != 0)
+			{
+				Appt.setDOCID(search_result);
+				this.updateView(Appt.getDOCID(), Appt.getPatientID());
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(A, "No Match Found");
+			}
 			
 		}
 		if(ae.getSource() == selectSlot)
@@ -137,12 +152,13 @@ public class AppointmentGui implements ActionListener {
 		List<Slots> result = (List<Slots>) session.createQuery("from Slots").list();
 		session.close();
 		sessionFactory.close();
+		DBHandler db = new DBHandler();
 		int k = 0;
 		for(int i = 0; i< result.size();i++)
 		{
 			if(result.get(i).getDocId() == _docID)
 			{
-				options[k]= (result.get(i).getDay() + " " + result.get(i).getStart_time() + " - " + result.get(i).getEnd_time());
+				options[k]= ("Dr. " + db.getdoctorbyid(_docID) + " " + result.get(i).getDay() + " " + result.get(i).getStart_time() + " - " + result.get(i).getEnd_time());
 				slotsArr[k] = result.get(i).getSlotNum();
 				k++;
 				System.out.println("k");

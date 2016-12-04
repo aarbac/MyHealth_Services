@@ -23,6 +23,14 @@ public abstract class Person {
 	String phoneNo;
 	String location;
 	String securityAnswer;
+	String Specialization;
+	
+	public String getSpecialization() {
+		return Specialization;
+	}
+	public void setSpecialization(String specialization) {
+		Specialization = specialization;
+	}
 	public String getFirstname() {
 		return firstname;
 	}

@@ -860,9 +860,6 @@ class GUI implements ActionListener {
 						}
 						
 					}
-					
-					
-
 					//break;
 					
 				}
@@ -1030,6 +1027,7 @@ class GUI implements ActionListener {
 				Type = "Doctor";
 				P = new Doctor();
 				library.add(P);
+				P.setSpecialization((JOptionPane.showInputDialog("Enter Specialization")));
 				P.setFirstname(textFieldFirstName.getText());
 				P.setLastname(textFieldLastName.getText());
 				P.setAge(textFieldAge.getText());
