@@ -8,21 +8,15 @@ public class DBHandler {
 	
 	public String getdoctorbyid(int _docId)
 	{
-		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		//int docfound = 0;
 		String S = "No Match";
+		Session session = startsession();
 		@SuppressWarnings({ "unchecked", "deprecation" })
 		List<Doctor> result = (List<Doctor>) session.createQuery("from Doctor").list();
 		for(int i = 0; i< result.size();i++)
 		{
 			if(result.get(i).getDocId() == _docId)
 			{
-				//docfound = 1;
-				S = result.get(i).getFirstname() + " " + result.get(i).getLastname();
-				
-				
+				S = result.get(i).getFirstname() + " " + result.get(i).getLastname();				
 			}
 		}
 		
@@ -31,10 +25,7 @@ public class DBHandler {
 	
 	public String getpatientbyid(int _patId)
 	{
-		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		//int docfound = 0;
+		Session session = startsession();
 		String S = "No Match";
 		@SuppressWarnings({ "unchecked", "deprecation" })
 		List<Patient> result = (List<Patient>) session.createQuery("from Patient").list();
@@ -42,14 +33,23 @@ public class DBHandler {
 		{
 			if(result.get(i).getPersonId() == _patId)
 			{
-				//docfound = 1;
-				S = result.get(i).getFirstname() + " " + result.get(i).getLastname();
-				
-				
+				S = result.get(i).getFirstname() + " " + result.get(i).getLastname();			
 			}
 		}
 		
 		return S;
+	}
+	
+	public Session startsession()
+	{
+		SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+		Session ses = sessionFactory.openSession();
+		ses.beginTransaction();
+		return ses;
+	}
+	public void stopsession(Session ses)
+	{
+		ses.close();
 	}
 
 }

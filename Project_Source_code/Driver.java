@@ -528,6 +528,7 @@ class GUI implements ActionListener {
 			DBHandler Db = new DBHandler();
 			for(int i = 0; i< result.size();i++)
 			{
+				
 				if(result.get(i).getDOCID() == CurrentID)
 				{
 					noAppts = 1;
@@ -538,7 +539,7 @@ class GUI implements ActionListener {
 				if(result.get(i).getPatientID() == CurrentID)
 				{
 					noAppts = 1;
-					String S = "Appointment with Doctor: " + Db.getdoctorbyid(result.get(i).getDOCID()) + " on " + result.get(i).AppointmentDetails ;
+					String S = "Appointment with Doctor: " + result.get(i).AppointmentDetails ;
 					JOptionPane.showMessageDialog(f,S);
 				}
 			}
