@@ -531,7 +531,7 @@ class GUI implements ActionListener {
 				if(result.get(i).getDOCID() == CurrentID)
 				{
 					noAppts = 1;
-					String S = "Appointment with Patient: " + Db.getpatientbyid(result.get(i).getPatientID()) + " on " + result.get(i).AppointmentDetails ;
+					String S = "Appointment with Patient: " + Db.getpatientbyid(result.get(i).getPatientID()) + " and " + result.get(i).AppointmentDetails ;
 					JOptionPane.showMessageDialog(f,S);
 		
 				}

@@ -38,7 +38,7 @@ public class AppointmentGui implements ActionListener {
     	Appt.setPatientID(_patID);
     	A = new JFrame("MyHealth----->Make Appointment");
 		A.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		A.setSize(600, 600);
+		A.setSize(750, 750);
 		
 		panel=new JPanel();
 		panel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
@@ -169,13 +169,13 @@ public class AppointmentGui implements ActionListener {
 //Available Slots
 		JLabel SlotInfo = new JLabel();
 		SlotInfo.setText("Available Slots");
-		SlotInfo.setBounds(30, 300, 200, 30);
+		SlotInfo.setBounds(30, 300, 170, 30);
 		Font currentFont = SlotInfo.getFont();
 		Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4F);
 		panel.add(SlotInfo);
 		SlotInfo.setFont(newFont);
 		list = new JComboBox<String>(options);
-		list.setBounds(200, 300, 300, 30);
+		list.setBounds(200, 300, 525, 30);
 		list.setFont(newFont);
 		panel.add(list);
 		System.out.println("Done2");
